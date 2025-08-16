@@ -23,6 +23,15 @@ import {
 import { Input } from '@/components/ui/input'
 import FormError from '@/components/form-error'
 import FormSuccess from '@/components/form-success'
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select'
+import { UserRole } from '@/lib/generated/prisma'
+import { Switch } from '@/components/ui/switch'
 
 const SettingsPage = () => {
 	const user = useCurrentUser()
@@ -36,6 +45,11 @@ const SettingsPage = () => {
 		resolver: zodResolver(SettingsSchema),
 		defaultValues: {
 			name: user?.name || undefined,
+			email: user?.email || undefined,
+			password: undefined,
+			newPassword: undefined,
+			role: user?.role || undefined,
+			isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
 		},
 	})
 
@@ -76,9 +90,121 @@ const SettingsPage = () => {
 												disabled={isPending}
 											/>
 										</FormControl>
+										<FormMessage />
 									</FormItem>
 								)}
 							/>
+							{user?.isOAuth === false && (
+								<>
+									<FormField
+										control={form.control}
+										name='email'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Email</FormLabel>
+												<FormControl>
+													<Input
+														{...field}
+														placeholder='johndoe@example.com'
+														type='email'
+														disabled={isPending}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name='password'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Password</FormLabel>
+												<FormControl>
+													<Input
+														{...field}
+														placeholder='********'
+														type='password'
+														disabled={isPending}
+														autoComplete='new-password'
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name='newPassword'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>New Password</FormLabel>
+												<FormControl>
+													<Input
+														{...field}
+														placeholder='********'
+														type='password'
+														disabled={isPending}
+														autoComplete='new-password'
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</>
+							)}
+							<FormField
+								control={form.control}
+								name='role'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Role</FormLabel>
+										<Select
+											{...field}
+											disabled={isPending}
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl className='w-full'>
+												<SelectTrigger>
+													<SelectValue placeholder='Select a role' />
+												</SelectTrigger>
+											</FormControl>
+											<FormMessage />
+											<SelectContent>
+												<SelectItem value={UserRole.USER}>User</SelectItem>
+												<SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+											</SelectContent>
+										</Select>
+									</FormItem>
+								)}
+							/>
+							{user?.isOAuth === false && (
+								<FormField
+									control={form.control}
+									name='isTwoFactorEnabled'
+									render={({ field }) => (
+										<FormItem className='flex items-center justify-between rounded-lg border p-3 shadow-sm'>
+											<div className='space-y-0.5'>
+												<FormLabel className='text-base'>
+													Two-Factor Authentication
+												</FormLabel>
+												<FormDescription>
+													Enable two-factor authentication for your account
+												</FormDescription>
+											</div>
+											<FormControl>
+												<Switch
+													disabled={isPending}
+													checked={field.value}
+													onCheckedChange={field.onChange}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							)}
 						</div>
 						<FormError message={error} />
 						<FormSuccess message={success} />
