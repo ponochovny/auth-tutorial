@@ -31,3 +31,5 @@ npm run dev
 - Two-Factor Authenticator
 - Guards
 - Fetch user data server-side & client-side
+- Callback url
+- Update user data
