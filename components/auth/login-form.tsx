@@ -67,7 +67,9 @@ const LoginForm = () => {
 						setShowTwoFactor(true)
 					}
 				})
-				.catch(() => {
+				.catch((error) => {
+					if (error?.digest?.startsWith('NEXT_REDIRECT')) return
+
 					setError('Something went wrong')
 				})
 		})
