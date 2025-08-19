@@ -29,15 +29,15 @@ export default async function RootLayout({
 	const session = await auth()
 
 	return (
-		<SessionProvider session={session}>
-			<html lang='en'>
-				<body
-					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-				>
+		<html lang='en'>
+			<body
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+			>
+				<SessionProvider session={session}>
 					<Toaster richColors theme='light' />
 					{children}
-				</body>
-			</html>
-		</SessionProvider>
+				</SessionProvider>
+			</body>
+		</html>
 	)
 }
