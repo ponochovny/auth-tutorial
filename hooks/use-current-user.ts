@@ -1,5 +1,9 @@
 import { useSession } from 'next-auth/react'
 
 export const useCurrentUser = () => {
-	return useSession().data?.user
+	const { data, status, update } = useSession()
+
+	if (status === 'unauthenticated') update()
+
+	return data?.user
 }
